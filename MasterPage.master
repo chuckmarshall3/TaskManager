@@ -1,0 +1,97 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>ACME Task Manager</title>
+        <!-- Bootstrap -->  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="includes/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="shortcut icon" href="images/bill_m.jpeg"/>
+</head>
+<body>
+    
+   <div>
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header" >
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle Navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="Home.aspx"><img src="../images/bill_m.jpeg" alt="Bill" class="img-rounded" height="50" width="50"/><span style="padding-left:10px;">ACME Task Manager</span></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+            <!--<li class="active"><a href="#">Link</a></li>-->
+            <!--<li><a href="#">Link</a></li>-->
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+            <li><a href="Home.aspx">Home</a></li>
+            <!--<li><a href="/about.aspx">About</a></li>-->
+                
+ 
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Projects <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+            
+
+                <li><a href="Home.aspx"><img src='/images/submit.png'/>&nbsp;&nbsp;Assign Tasks</a></li>
+
+
+                </ul>
+            </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+      
+   </div>
+    <div class="container">
+    <div class="jumbotron" style="padding:10px">
+
+        <div class="row marketing">
+            
+            <div class="col-sm-12" style="text-align:center">
+            
+                <div class="col-sm-12 panel">
+
+                    <div class="panel-body">
+
+            
+                        <form role="form" id="form1" runat="server">
+                            <div id="Login" style="text-align:right">
+                                <asp:Label ID="lbLogin" runat="server" onClick="LinkButton1_Click" Text="" />
+                                <asp:LinkButton ID="LinkButton1" runat="server" OnClick="LinkButton1_Click1"  >LinkButton</asp:LinkButton>
+                            </div>
+                            <div id="ContenArea" style="text-align:center">
+                                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+   
+    <script src="../includes/bootstrap/js/bootstrap.js"></script>
+<script>
+    $('.dropdown-toggle').dropdown()
+</script>
+
+
+
+</body>
+</html>
