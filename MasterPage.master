@@ -9,6 +9,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link href="includes/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="shortcut icon" href="images/bill_m.jpeg"/>
+
+
+<style type="text/css">
+
+label
+{
+font-size: 12px;
+
+
+}
+
+</style>
+
+
+
 </head>
 <body>
     
@@ -60,7 +75,7 @@
 
         <div class="row marketing">
             
-            <div class="col-sm-12" style="text-align:center">
+            <div class="col-sm-12">
             
                 <div class="col-sm-12 panel">
 
@@ -68,11 +83,12 @@
 
             
                         <form role="form" id="form1" runat="server">
+
                             <div id="Login" style="text-align:right">
                                 <asp:Label ID="lbLogin" runat="server" onClick="LinkButton1_Click" Text="" />
                                 <asp:LinkButton ID="LinkButton1" runat="server" OnClick="LinkButton1_Click1"  >LinkButton</asp:LinkButton>
                             </div>
-                            <div id="ContenArea" style="text-align:center">
+                            <div id="ContenArea">
                                 <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
                             </div>
                         </form>

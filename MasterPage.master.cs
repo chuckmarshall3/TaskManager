@@ -11,21 +11,27 @@ public partial class MasterPage : System.Web.UI.MasterPage
     {
         if(Session["username"] != null)
         {
-            lbLogin.Text = "Welcome "+ Session["username"].ToString();
+
+
+            string fname = System.Threading.Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(Session["username"].ToString());
+
+
+            lbLogin.Text = "Welcome " + fname+"&nbsp;&nbsp;";
             lbLogin.Visible = true;
             LinkButton1.Text = "Logout";
         }
         else{
             lbLogin.Visible = false;
-            LinkButton1.Text = "Login";
+            LinkButton1.Visible = false;
         }
     }
 
     protected void LinkButton1_Click1(object sender, EventArgs e)
     {
         //User Logs in
-        if (LinkButton1.Text == "Login")
+        if (LinkButton1.Text == "Logout")
         {
+            Session.Clear();
             lbLogin.Visible = false;
             LinkButton1.Visible = false;
             Response.Redirect("~/Views/UserLogin.aspx");
@@ -34,8 +40,10 @@ public partial class MasterPage : System.Web.UI.MasterPage
         else
         {
             //User Logs out
-            Session.Clear();
-            Response.Redirect("~/Views/Home.aspx");
+            lbLogin.Visible = true;
+            LinkButton1.Visible = true;
+           
+            Response.Redirect("~/Views/TaskMain.aspx");
 
         }
     }

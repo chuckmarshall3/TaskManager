@@ -19,27 +19,33 @@ using System.Data;
 public class TasksWebService : System.Web.Services.WebService {
 
     List<Tasks> list = new List<Tasks>();
-
+   
 
     public TasksWebService () {
+    
+    }
+
+    [WebMethod(EnableSession = true)]
+    public List<Tasks> GetUserTasks() {
 
 
-        string sql = string.Format("SELECT * FROM tasks ;");
-         
+            string sql = string.Format("SELECT t.*,u.fname FROM tasks t LEFT JOIN users u on t.createdby=u.id_users WHERE u.username='" + Session["username"]+ "' ORDER BY priority desc, createddate;");
+        
+
         dbconn ds = new dbconn();
         MySqlDataReader results = ds.select(sql);
 
         while (results.Read())
         {
-            
+
 
             string id_tasks = results.GetString(0);
             string description = results.GetString(1);
-            string createdby = results.GetString(1);
-            string createddate = results.GetString(1);
-            string completeddate = results.GetString(1);
-            string finalapprovaldate = results.GetString(1);
-            string priority = results.GetString(1);
+            string createdby = results.GetString(7);
+            string createddate = results.GetString(3);
+            string completeddate = results.GetString(4);
+            string finalapprovaldate = results.GetString(5);
+            string priority = results.GetString(6);
 
             list.Add(new Tasks { id_tasks = id_tasks, description = description, createdby = createdby, createddate = createddate, completeddate = completeddate, finalapprovaldate = finalapprovaldate, priority = priority });
 
@@ -49,12 +55,31 @@ public class TasksWebService : System.Web.Services.WebService {
 
 
 
-        
+        return list;
     }
 
     [WebMethod]
-    public List<Tasks> GetTasks() {
+    public List<Tasks> CreateTask()
+    {
         return list;
     }
+
+    [WebMethod]
+    public List<Tasks> UpdateTask()
+    {
+        return list;
+    }
+
+    [WebMethod]
+    public List<Tasks> DeleteTask(string rec_id)
+    {
+        int id_tasks = Int32.Parse(rec_id);
+        string sql = string.Format("DELETE FROM tasks WHERE id_tasks=" + id_tasks + ";");
+
+        dbconn ds = new dbconn();
+        MySqlDataReader results = ds.select(sql);
+        return list;
+    }
+
     
 }

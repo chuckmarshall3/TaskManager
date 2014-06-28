@@ -11,19 +11,26 @@ padding:0px 0px 0px 0px;
 }
 
 </style>
-    <h3 style="cursor:pointer" onclick="gettasks()">Tasks Main</h3>
+    <h3 style="cursor:pointer" onclick="gettasks()">Current Tasks</h3>
     <br />
-    <div ><table class="table table-bordered table-condensed table-responsive table-hover" id="dataresults" style=" overflow: auto; display:block;"></table></div>
+    <div ><table class="table table-condensed table-responsive table-hover" id="dataresults" style=" overflow: auto; display:block;"></table></div>
     <script src="../includes/jquery/jquery-1.8.2.js"></script>
     
     
     <script>
+        window.onload = gettasks;
 
+        function getusertype() {
+
+
+
+
+        }
         function gettasks() {
 
             $.ajax({
                 type: "POST",
-                url: "../TasksWebService.asmx/GetTasks",
+                url: "../TasksWebService.asmx/GetUserTasks",
                 data: "",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
@@ -33,18 +40,19 @@ padding:0px 0px 0px 0px;
                     var data = response.d;
                
                 
-                    var datahtml = "<tr><th>ID</th><th>Description</th><th>Created By</th><th>Created Date</th><th>Completed Date</th><th>Final Approval</th><th>Priority</th></tr>";
+                    var datahtml = "<tr><th>Priority</th><th>Description</th><th>Created By</th><th>Created Date</th><th>Completed Date</th><th>Final Approval</th><th></th></tr>";
                     
                     jQuery.each(data, function(i, val) {
                      
                         datahtml += "<tr>";
-                        datahtml += "<td>" + val.id_tasks + "</td>";
+                        datahtml += "<td>" + val.priority + "</td>";
                         datahtml += "<td>" + val.description + "</td>";
                         datahtml += "<td>" + val.createdby + "</td>";
                         datahtml += "<td>" + val.createddate + "</td>";
                         datahtml += "<td>" + val.completeddate + "</td>";
                         datahtml += "<td>" + val.finalapprovaldate + "</td>";
-                        datahtml += "<td>" + val.priority + "</td>";
+                        
+                        datahtml += "<td style='cursor:pointer' onclick='deletetask(" + val.priority + ")'><img src='../images/delete.png' height='16px' width='16px'></td>";
                         datahtml += "</tr>";
 
                     });

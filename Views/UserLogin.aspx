@@ -3,8 +3,9 @@
 
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <div class="col-sm-12" style="text-align:center">
-        <div class="col-sm-2 panel">                       
+    <h3 style="cursor:pointer" onclick="gettasks()">Login</h3>
+    <div class="row" style="margin-top:30px; ">
+        <div class="col-lg-12" >                     
             <div class="form-group">
             <label>Username</label>
             <asp:Textbox  id="txtLogin" runat="server" autocomplete="off"/>
@@ -16,13 +17,14 @@
             <asp:Textbox  id="txtPassword" runat="server" autocomplete="off"/>
                                     
             </div>
-
-            <div class="form-group" style="text-align:right">
+            <br />
+            <div class="form-group">
             <asp:Button ID="btnLogin" runat="server" class="btn btn-primary" OnClick="btnLogin_Click" Text="Login"/>
             
             
              
             </div>
+            
             <div class="form-group">
                 <asp:Label ID="lblError" runat="server" Text=""/>
             </div>

@@ -13,18 +13,8 @@ public partial class Views_UserLogin : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
-
-        //Output Session Variables
-            for (int i = 0; i < Session.Count; i++)
-            {
-
-                Response.Write(Session[i]);
-            }
         Session.Clear();
        
-        
-
     }
 
     protected void btnLogin_Click(object sender, EventArgs e)
@@ -36,8 +26,12 @@ public partial class Views_UserLogin : System.Web.UI.Page
 
         if (user != null)
         {
+            Session["id_users"] = user.id_users;
             Session["username"] = user.username;
-            Session["password"] = user.password;
+            Session["position"] = user.position;
+            Session["fname"] = user.fname;
+            Session["lname"] = user.lname;
+            
             Response.Redirect("~/Views/TaskMain.aspx");
         }
         else
