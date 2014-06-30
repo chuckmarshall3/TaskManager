@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using System.Text;
+using System.Net;
 
 using System.Configuration;
 using MySql.Data.MySqlClient;
 using System.Data;
+
+//using Newtonsoft.Json;
+//using Newtonsoft.Json.Linq;
+//using System.Web.Script.Serialization;
+
+
+
 
 
 /// <summary>
@@ -19,6 +28,7 @@ using System.Data;
 public class TasksWebService : System.Web.Services.WebService {
 
     List<Tasks> list = new List<Tasks>();
+    List<Employees> employeeNameList = new List<Employees>();
    
 
     public TasksWebService () {
@@ -29,7 +39,7 @@ public class TasksWebService : System.Web.Services.WebService {
     public List<Tasks> GetUserTasks() {
 
 
-            string sql = string.Format("SELECT t.*,u.fname FROM tasks t LEFT JOIN users u on t.createdby=u.id_users WHERE u.username='" + Session["username"]+ "' ORDER BY priority desc, createddate;");
+            string sql = string.Format("SELECT t.*,u.fname FROM tasks t LEFT JOIN users u on t.createdby=u.id_users WHERE u.username='" + Session["username"]+ "' AND t.deleted=0 ORDER BY priority desc, createddate desc;");
         
 
         dbconn ds = new dbconn();
@@ -41,13 +51,16 @@ public class TasksWebService : System.Web.Services.WebService {
 
             string id_tasks = results.GetString(0);
             string description = results.GetString(1);
-            string createdby = results.GetString(7);
-            string createddate = results.GetString(3);
-            string completeddate = results.GetString(4);
-            string finalapprovaldate = results.GetString(5);
-            string priority = results.GetString(6);
+            string priority = results.GetString(2);
+            string duedate = results.GetString(3);
+            
+            string createdby = results.GetString(9);
+            string createddate = results.GetString(5);
+            string completeddate = results.GetString(6);
+            string finalapprovaldate = results.GetString(7);
+            string deleted = results.GetString(8);
 
-            list.Add(new Tasks { id_tasks = id_tasks, description = description, createdby = createdby, createddate = createddate, completeddate = completeddate, finalapprovaldate = finalapprovaldate, priority = priority });
+            list.Add(new Tasks { id_tasks = id_tasks, description = description, priority = priority, duedate = duedate, createdby = createdby, createddate = createddate, completeddate = completeddate, finalapprovaldate = finalapprovaldate, deleted = deleted });
 
 
         }
@@ -59,9 +72,20 @@ public class TasksWebService : System.Web.Services.WebService {
     }
 
     [WebMethod]
-    public List<Tasks> CreateTask()
+    public void AddTask(string description, string assignedto, string priority, string duedate, string completiondate, string finalapprovaldate)
     {
-        return list;
+
+        string sql = string.Format("INSERT INTO tasks (description,  priority, duedate, completeddate, finalapprovaldate) VALUES('" + description +  "','" + priority + "','" + duedate + "','" + completiondate + "','" + finalapprovaldate + "' );");
+
+        //HttpContext.Current.Response.BufferOutput = true;
+        //HttpContext.Current.Response.Write(sql);
+        //HttpContext.Current.Response.Flush();
+
+
+        dbconn ds = new dbconn();
+        MySqlDataReader results = ds.select(sql);
+
+        
     }
 
     [WebMethod]
@@ -70,16 +94,60 @@ public class TasksWebService : System.Web.Services.WebService {
         return list;
     }
 
+
     [WebMethod]
-    public List<Tasks> DeleteTask(string rec_id)
+    public void DeleteTask(string recid, string name)
     {
-        int id_tasks = Int32.Parse(rec_id);
-        string sql = string.Format("DELETE FROM tasks WHERE id_tasks=" + id_tasks + ";");
+
+        //string results = recid + "," + name;
+
+
+        string sql = string.Format("UPDATE tasks SET deleted=1 WHERE id_tasks=" + recid + ";");
+
+
+            dbconn ds = new dbconn();
+            MySqlDataReader results = ds.select(sql);
+            //return results.ToString();
+  
+    }
+
+
+    /********************Employee Information*****************/
+
+    [WebMethod(EnableSession = true)]
+    public List<Employees> GetEmployeeNames()
+    {
+
+
+        string sql = string.Format("SELECT fname, lname, id_users FROM users  WHERE deleted=0 AND reports_to=4 ORDER BY lname;");
+
 
         dbconn ds = new dbconn();
         MySqlDataReader results = ds.select(sql);
-        return list;
+
+        while (results.Read())
+        {
+
+
+            string fname = results.GetString(0);
+            string lname = results.GetString(1);
+            string id_users = results.GetString(2);
+
+
+            employeeNameList.Add(new Employees { fname = fname, lname = lname, id_users = id_users, });
+
+
+        }
+        results.Close();
+
+
+
+        return employeeNameList;
     }
+
+
+
+
 
     
 }

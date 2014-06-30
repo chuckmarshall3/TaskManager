@@ -36,6 +36,14 @@ public class User
         this.position = position;
     }
 
+    public User(string fname, string lname, string id_users)
+    {
+        this.fname = fname;
+        this.lname = lname;
+        this.id_users = id_users;
+ 
+    }
+
     
 
 

@@ -1,0 +1,349 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../includes/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../includes/bootstrap/datepicker/css/datepicker.css" rel="stylesheet" media="screen">
+    <link rel="shortcut icon" href="../images/bill_m.jpeg" />
+
+
+    <script src="../includes/jquery/jquery-1.8.2.js"></script>
+    <script src="../includes/bootstrap/js/bootstrap.js"></script>
+
+    <script>
+        $(function () {
+            $("#navbar").load("NavBar.html");
+        });
+    </script>
+
+    <style type="text/css">
+        table, th, td {
+            font-size: 12px;
+            padding: 0px 0px 0px 0px;
+        }
+
+    #saving {
+        width: 100px;
+        position: fixed;
+        top: 40%;
+        left: 52%;
+        margin-left: -60px;
+        z-index: 500;
+    }
+
+    .form-group{
+        width:100%;
+    }
+    </style>
+
+</head>
+<body>
+
+    <div id="navbar"></div>
+    <div id="saving" class="show"><center><img src="../images/ajax-loader.gif" /></center></div>
+
+    <div id="addtaskmodal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-top:150px;">
+                
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add Task</h4>
+                </div>
+
+                <div id="bodyModal3" class="modal-body" style="height:460px;">
+                    <div id="bodyModal4">
+
+                        
+                        <form id="addtask" role="form"  method="post">
+                            <div id="decsriptiondiv" class="form-group">
+                                <label class="control-label">Task Description</label>
+                                <input id="description" name="description" type="text" class="form-control" placeholder="Enter Description" autocomplete="off">
+                            </div>
+
+                            <div id="assignedtodiv" class="form-group">
+                                <label class="control-label">Assigned To</label>
+                                <select id="assignedto" name="assignedto" class="form-control">
+                                    <option value=""></option>
+
+                                </select>
+
+                            </div>
+                            <div id="prioritydiv" class="form-group">
+                                <label class="control-label">Priority</label>
+                                <select id="priority" name="priority" class="form-control">
+                                    <option value=""></option>
+                                    <option value="1">Low</option>
+                                    <option value="2">Medium</option>
+                                    <option value="3">High</option>
+
+                                </select>
+
+                            </div>
+                            <div id="duedatediv" class="form-group">
+                                <label class="control-label">Due Date</label>
+                                
+                                <input id="duedate" name="duedate" type="date" class=" form-control" />
+                            </div>
+
+                            <div id="completiondiv" class="form-group">
+                                <label class="control-label">Completion Date</label>
+
+                                <input id="completiondate" name="completiondate" type="date" class=" form-control" />
+                            </div>
+
+                            <div id="finalapprovaldiv" class="form-group">
+                                <label class="control-label">Final Approval Date</label>
+
+                                <input id="finalapprovaldate" name="finalapprovaldate" type="date" class=" form-control" />
+                            </div>
+
+                        </form>
+
+
+                        
+                    </div>
+                    <div id="bodyModal5" class="toggle2">
+                        <h3 style='text-align:center; margin-top:50px'>Task Added Successfully</h3>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addtask();">Add Task</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <div class="container">
+        <div class="jumbotron" style="padding:10px">
+
+            <div class="row marketing">
+
+                <div class="col-sm-12">
+
+                    <div class="col-sm-12 panel">
+
+                        <div class="panel-body">
+
+                            <h3 style="cursor:pointer">Current Tasks</h3><img src="../images/add.png" style="margin-left:10px; cursor:pointer" height="16px" width="16px" onclick="modaltoggle()"/>
+                            <br />
+                            <div><table class="table table-condensed table-responsive table-hover" id="dataresults" style=" overflow: auto; display:block;"></table></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../includes/bootstrap/datepicker/js/bootstrap-datepicker.js"></script>
+    <script>
+
+        window.onload = gettasks;
+        $(".toggle2").toggle();
+
+        $('body').off('.data-api');
+        $('body').off('.datepicker.data-api')
+
+        $(function () {
+            $("#duedate").datepicker({ dateFormat: 'mm-dd-yy' }).on('changeDate', function () { $("#duedate").datepicker('hide') });
+        });
+
+
+        //Get Employee Names for Select Box
+        $(function () {
+
+            $.ajax({
+                type: "POST",
+                url: "../TasksWebService.asmx/GetEmployeeNames",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+
+                    //alert(response);
+                    var data = response.d;
+
+                    var options = $("#assignedto");
+                    $.each(data, function () {
+                        options.append($("<option />").val(this.id_users).text(this.lname+", "+this.fname));
+                    });
+
+
+
+                },
+                failure: function (msg) {
+                    alert(msg);
+                }
+            });
+
+        });
+
+
+
+
+
+
+        function gettasks() {
+
+        
+
+            $.ajax({
+                type: "POST",
+                url: "../TasksWebService.asmx/GetUserTasks",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    //alert(response);
+                    var data = response.d;
+
+
+                    var datahtml = "<tr><th>Priority</th><th>Description</th><th>Created By</th><th>Due Date</th><th>Created Date</th><th>Completed Date</th><th>Final Approval</th><th></th></tr>";
+
+                    jQuery.each(data, function (i, val) {
+
+                        datahtml += "<tr>";
+                        datahtml += "<td>" + val.priority + "</td>";
+                        datahtml += "<td>" + val.description + "</td>";
+                        
+                        datahtml += "<td>" + val.createdby + "</td>";
+                        datahtml += "<td>" + val.duedate + "</td>";
+                        datahtml += "<td>" + val.createddate + "</td>";
+                        datahtml += "<td>" + val.completeddate + "</td>";
+                        datahtml += "<td>" + val.finalapprovaldate + "</td>";
+
+                        datahtml += "<td style='cursor:pointer' onclick='deletetask(" + val.priority + ")'><img src='../images/delete.png' height='16px' width='16px'></td>";
+                        datahtml += "</tr>";
+
+                    });
+
+
+                    $("#dataresults").html(datahtml);
+                    document.getElementById('saving').className = 'hide';
+
+
+
+
+                },
+                failure: function (msg) {
+                    alert(msg);
+                }
+            });
+
+        }
+        function addtask() {
+
+            document.getElementById('saving').className = 'show';
+
+            $.ajax({
+                type: 'POST',
+                url: '../TasksWebService.asmx/AddTask',
+                data: $('#addtask').serialize(),
+                
+                dataType: "json",
+
+                success: function (response) {
+
+                    $('#bodyModal4').toggle("blinds");
+
+                    $("#bodyModal5").toggle("blinds");
+
+
+                    setTimeout(function () {
+                        $('#addtaskmodal').modal('toggle');
+                        document.getElementById('saving').className = 'hide';
+                        $('#bodyModal4').toggle();
+                        $("#bodyModal5").toggle();
+                        document.getElementById("addtask").reset();
+                        //document.getElementById('fnamediv').className = 'form-group';
+                        //document.getElementById('lnamediv').className = 'form-group';
+                        //document.getElementById('cemaildiv').className = 'form-group';
+                        //document.getElementById('cphonediv').className = 'form-group';
+                        window.top.location.reload();
+                    }, 200);
+
+
+
+                },
+                failure: function (msg) {
+                    alert(msg)
+                }
+            });
+
+
+
+
+
+
+
+        }
+        function edittask(recid) {
+
+            $.ajax({
+                type: "POST",
+                url: "../TasksWebService.asmx/EditTask",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    alert(response);
+
+
+                },
+                failure: function (msg) {
+                    alert(msg);
+                }
+            });
+
+        }
+
+        function deletetask(recid) {
+
+            var r = confirm("Are you sure you want to delete this task?");
+            if (r == true) {
+                document.getElementById('saving').className = 'show';
+                //alert(recid);
+                $.ajax({
+                    type: "POST",
+                    url: "../TasksWebService.asmx/DeleteTask",
+                    data: "{'recid':'" + recid + "','name':'james'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+
+                        var data = response.d;
+                        //alert(data);
+                        gettasks();
+
+
+
+
+
+                    },
+                    failure: function (msg) {
+                        alert(msg);
+                    }
+                });
+            }
+
+
+        }
+
+        function modaltoggle() {
+            $('#addtaskmodal').modal('toggle');
+            //document.getElementById('type').value = 'add';
+        }
+
+
+
+    </script>
+
+
+</body>
+</html>

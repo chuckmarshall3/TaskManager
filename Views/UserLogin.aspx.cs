@@ -32,7 +32,7 @@ public partial class Views_UserLogin : System.Web.UI.Page
             Session["fname"] = user.fname;
             Session["lname"] = user.lname;
             
-            Response.Redirect("~/Views/TaskMain.aspx");
+            Response.Redirect("~/Views/TaskMain.html");
         }
         else
         {

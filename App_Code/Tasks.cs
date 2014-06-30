@@ -11,11 +11,13 @@ public class Tasks
 
         public string id_tasks { get; set; }
         public string description { get; set; }
+        public string priority { get; set; }
+        public string duedate { get; set; }
         public string createdby { get; set; }
         public string createddate { get; set; }
         public string completeddate { get; set; }
         public string finalapprovaldate { get; set; }
-        public string priority { get; set; }
+        public string deleted { get; set; }
 
 	
 }

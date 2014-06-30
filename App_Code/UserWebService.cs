@@ -4,6 +4,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Services;
 
+using System.Configuration;
+using MySql.Data.MySqlClient;
+using System.Data;
+
+
 /// <summary>
 /// Summary description for UserWebService
 /// </summary>
@@ -13,15 +18,14 @@ using System.Web.Services;
 [System.Web.Script.Services.ScriptService]
 public class UserWebService : System.Web.Services.WebService {
 
+
+    
+
+
     public UserWebService () {
 
     }
 
-    [WebMethod]
-    public string GetUser() {
 
-
-        return "Hello World";
-    }
     
 }

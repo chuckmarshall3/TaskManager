@@ -3,14 +3,16 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
 <style type="text/css">
-table, th, td
-{
-font-size: 12px;
-padding:0px 0px 0px 0px;
 
-}
+    table, th, td
+    {
+    font-size: 12px;
+    padding:0px 0px 0px 0px;
+    }
 
 </style>
+
+
     <h3 style="cursor:pointer" onclick="gettasks()">Current Tasks</h3>
     <br />
     <div ><table class="table table-condensed table-responsive table-hover" id="dataresults" style=" overflow: auto; display:block;"></table></div>
@@ -20,12 +22,6 @@ padding:0px 0px 0px 0px;
     <script>
         window.onload = gettasks;
 
-        function getusertype() {
-
-
-
-
-        }
         function gettasks() {
 
             $.ajax({
@@ -69,6 +65,80 @@ padding:0px 0px 0px 0px;
                 }
             });
             
+        }
+        function addtask() {
+
+            $.ajax({
+                type: "POST",
+                url: "../TasksWebService.asmx/AddTask",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    alert(response);
+
+
+
+
+
+                },
+                failure: function (msg) {
+                    alert(msg);
+                }
+            });
+
+
+        }
+        function edittask(recid) {
+
+            $.ajax({
+                type: "POST",
+                url: "../TasksWebService.asmx/EditTask",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    alert(response);
+
+
+
+
+
+                },
+                failure: function (msg) {
+                    alert(msg);
+                }
+            });
+
+
+        }
+
+        function deletetask(recid) {
+
+            alert(recid);
+            $.ajax({
+                type: "POST",
+                url: "../TasksWebService.asmx/DeleteTask",
+                data: "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+
+                    alert(response);
+
+
+
+
+
+                },
+                failure: function (msg) {
+                    alert(msg);
+                }
+            });
+
+
         }
 
 
