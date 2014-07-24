@@ -28,13 +28,23 @@
         position: fixed;
         top: 40%;
         left: 52%;
-        margin-left: -60px;
-        z-index: 500;
+        margin-left: -100px;
+        z-index: 1500;
     }
 
     .form-group{
         width:100%;
     }
+
+
+   .datepicker {
+        z-index: 1151;
+    }
+
+    
+
+
+
     </style>
 
 </head>
@@ -49,7 +59,7 @@
                 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Add Task</h4>
+                    <h4 id="modaltitle" class="modal-title">Add Task</h4>
                 </div>
 
                 <div id="bodyModal3" class="modal-body" style="height:460px;">
@@ -61,6 +71,26 @@
                                 <label class="control-label">Task Description</label>
                                 <input id="description" name="description" type="text" class="form-control" placeholder="Enter Description" autocomplete="off">
                             </div>
+
+                            <div id="duedatediv" class="form-group">
+                                <label class="control-label">Due Date</label>
+                                <input id="duedate" name="duedate" type="text" class="datepicker form-control">
+
+                            </div>
+
+                            <div id="completiondiv" class="form-group">
+                                <label class="control-label">Completion Date</label>
+
+                                <input id="completiondate" name="completiondate" type="text" class="datepicker form-control" />
+                            </div>
+
+                            <div id="finalapprovaldiv" class="form-group">
+                                <label class="control-label">Final Approval Date</label>
+
+                                <input id="finalapprovaldate" name="finalapprovaldate" type="text" class="datepicker form-control" />
+                            </div>
+
+
 
                             <div id="assignedtodiv" class="form-group">
                                 <label class="control-label">Assigned To</label>
@@ -81,23 +111,10 @@
                                 </select>
 
                             </div>
-                            <div id="duedatediv" class="form-group">
-                                <label class="control-label">Due Date</label>
-                                
-                                <input id="duedate" name="duedate" type="date" class=" form-control" />
-                            </div>
 
-                            <div id="completiondiv" class="form-group">
-                                <label class="control-label">Completion Date</label>
 
-                                <input id="completiondate" name="completiondate" type="date" class=" form-control" />
-                            </div>
-
-                            <div id="finalapprovaldiv" class="form-group">
-                                <label class="control-label">Final Approval Date</label>
-
-                                <input id="finalapprovaldate" name="finalapprovaldate" type="date" class=" form-control" />
-                            </div>
+                            <input id="submittype" name="submittype" type="hidden" value="add" />
+                            <input id="id_tasks" name="id_tasks" type="hidden" value="" />
 
                         </form>
 
@@ -109,8 +126,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="addtask();">Add Task</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="formreset();">Close</button>
+                    <button id="addbutton"type="button" class="btn btn-primary" onclick="addtask();">Add Task</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -139,18 +156,37 @@
         </div>
     </div>
     <script src="../includes/bootstrap/datepicker/js/bootstrap-datepicker.js"></script>
+
     <script>
 
-        window.onload = gettasks;
+
+
+
+
+        $(document).ready(function () {
+            gettasks();
+        });
+
+
         $(".toggle2").toggle();
 
         $('body').off('.data-api');
         $('body').off('.datepicker.data-api')
-
+       
         $(function () {
             $("#duedate").datepicker({ dateFormat: 'mm-dd-yy' }).on('changeDate', function () { $("#duedate").datepicker('hide') });
         });
+        $(function () {
+            $("#completiondate").datepicker({ dateFormat: 'mm-dd-yy' }).on('changeDate', function () { $("#completiondate").datepicker('hide') });
+        });
+        $(function () {
+            $("#finalapprovaldate").datepicker({ dateFormat: 'mm-dd-yy' }).on('changeDate', function () { $("#finalapprovaldate").datepicker('hide') });
+        });
 
+        //Reset Modal Form
+        function formreset() {
+            document.getElementById("addtask").reset();
+        }
 
         //Get Employee Names for Select Box
         $(function () {
@@ -189,7 +225,8 @@
 
         function gettasks() {
 
-        
+
+
 
             $.ajax({
                 type: "POST",
@@ -203,21 +240,24 @@
                     var data = response.d;
 
 
-                    var datahtml = "<tr><th>Priority</th><th>Description</th><th>Created By</th><th>Due Date</th><th>Created Date</th><th>Completed Date</th><th>Final Approval</th><th></th></tr>";
+                    var datahtml = "<tr><th>Priority</th><th>Description</th><th>Assigned To</th><th>Created By</th><th>Due Date</th><th>Created Date</th><th></th><th></th></tr>";
 
                     jQuery.each(data, function (i, val) {
+
+
+
 
                         datahtml += "<tr>";
                         datahtml += "<td>" + val.priority + "</td>";
                         datahtml += "<td>" + val.description + "</td>";
-                        
+                        datahtml += "<td>" + val.assignedto + "</td>";
                         datahtml += "<td>" + val.createdby + "</td>";
                         datahtml += "<td>" + val.duedate + "</td>";
                         datahtml += "<td>" + val.createddate + "</td>";
-                        datahtml += "<td>" + val.completeddate + "</td>";
-                        datahtml += "<td>" + val.finalapprovaldate + "</td>";
-
-                        datahtml += "<td style='cursor:pointer' onclick='deletetask(" + val.priority + ")'><img src='../images/delete.png' height='16px' width='16px'></td>";
+                       // datahtml += "<td>" + val.completeddate + "</td>";
+                       // datahtml += "<td>" + val.finalapprovaldate + "</td>";
+                        datahtml += "<td style='cursor:pointer' onclick='modaltoggle(); setedit(" + val.id_tasks + ")'><img src='../images/editblue.png' height='20px' width='20px'></td>";
+                        datahtml += "<td style='cursor:pointer' onclick='deletetask(" + val.id_tasks + ")'><img src='../images/delete.png' height='16px' width='16px'></td>";
                         datahtml += "</tr>";
 
                     });
@@ -236,6 +276,9 @@
             });
 
         }
+
+
+
         function addtask() {
 
             document.getElementById('saving').className = 'show';
@@ -247,8 +290,9 @@
                 
                 dataType: "json",
 
-                success: function (response) {
-
+                success: function () {
+                    //alert("yes");
+                   
                     $('#bodyModal4').toggle("blinds");
 
                     $("#bodyModal5").toggle("blinds");
@@ -256,16 +300,20 @@
 
                     setTimeout(function () {
                         $('#addtaskmodal').modal('toggle');
-                        document.getElementById('saving').className = 'hide';
-                        $('#bodyModal4').toggle();
-                        $("#bodyModal5").toggle();
+                        
+                        $('#bodyModal4').toggle("blinds");
+                        $("#bodyModal5").toggle("blinds");
                         document.getElementById("addtask").reset();
-                        //document.getElementById('fnamediv').className = 'form-group';
-                        //document.getElementById('lnamediv').className = 'form-group';
-                        //document.getElementById('cemaildiv').className = 'form-group';
-                        //document.getElementById('cphonediv').className = 'form-group';
-                        window.top.location.reload();
-                    }, 200);
+                        // window.top.location.reload();
+                        gettasks();
+                        $("#modaltitle").html("Add Task");
+                        $('#addbutton').text('Add Task').button("refresh");
+                        $("#submittype").val("add");
+                        $("#id_tasks").val("");
+
+ 
+                        document.getElementById('saving').className = 'hide';
+                    }, 100);
 
 
 
@@ -276,23 +324,73 @@
             });
 
 
-
-
-
-
-
         }
-        function edittask(recid) {
+
+
+
+        function setedit(id_tasks) {
+           
+            document.getElementById('saving').className = 'show';
+            
+            $("#modaltitle").html("Edit Task");
+            $('#addbutton').text('Save Changes').button("refresh");
+            $("#submittype").val("edit");
+            $("#id_tasks").val(id_tasks);
 
             $.ajax({
                 type: "POST",
-                url: "../TasksWebService.asmx/EditTask",
-                data: "",
+                url: "../TasksWebService.asmx/GetTaskInfo",
+                data: "{'recid':'" + id_tasks + "'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
 
-                    alert(response);
+                    //alert(response);
+                    var data = response.d;
+
+
+                    jQuery.each(data, function (i, val) {
+                       
+
+                        document.getElementById("description").value = val.description;
+                        document.getElementById("assignedto").value = val.assignedtoid;
+                        document.getElementById("priority").value = val.priority;
+
+                        if (val.duedate != "") {
+                            var ddate = new Date(val.duedate);
+                            var dday = ddate.getDate();
+                            var dmonth = ddate.getMonth() + 1;
+                            var dyear = ddate.getFullYear();
+                            var duedate = dmonth + "/" + dday + "/" + dyear;
+                            document.getElementById("duedate").value = duedate;
+                        }
+
+                        if (val.completeddate != "") {
+                            var cdate = new Date(val.completeddate);
+                            var cday = cdate.getDate();
+                            var cmonth = cdate.getMonth() + 1;
+                            var cyear = cdate.getFullYear();
+                            cdate = cmonth + "/" + cday + "/" + cyear;
+                            document.getElementById("completiondate").value = cdate;
+                        }
+
+                        if (val.finalapprovaldate != "") {
+                            var fdate = new Date(val.finalapprovaldate);
+                            var fday = fdate.getDate();
+                            var fmonth = fdate.getMonth() + 1;
+                            var fyear = fdate.getFullYear();
+                            fdate = fmonth + "/" + fday + "/" + fyear;
+                            document.getElementById("finalapprovaldate").value = fdate;
+                        }
+
+
+                    });
+
+
+                    
+                    document.getElementById('saving').className = 'hide';
+
+
 
 
                 },
@@ -300,8 +398,9 @@
                     alert(msg);
                 }
             });
-
+            
         }
+
 
         function deletetask(recid) {
 
@@ -320,10 +419,6 @@
                         var data = response.d;
                         //alert(data);
                         gettasks();
-
-
-
-
 
                     },
                     failure: function (msg) {

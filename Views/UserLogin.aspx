@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="UserLogin.aspx.cs" Inherits="Views_UserLogin" %>
+﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="UserLogin.aspx.cs" Inherits="Views_UserLogin" %>
 
 
 
@@ -14,7 +14,8 @@
 
             <div class="form-group">
             <label>Password</label>
-            <asp:Textbox  id="txtPassword" runat="server" autocomplete="off"/>
+
+            <asp:Textbox  id="txtPassword" type="password" runat ="server" autocomplete="off"/>
                                     
             </div>
             <br />
