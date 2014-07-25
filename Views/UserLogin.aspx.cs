@@ -22,7 +22,7 @@ public partial class Views_UserLogin : System.Web.UI.Page
         
         
 
-        User user = dbConnection.LoginUser(txtLogin.Text, txtPassword.Text);
+        User user = dbconn.LoginUser(txtLogin.Text, txtPassword.Text);
 
         if (user != null)
         {
