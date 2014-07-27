@@ -146,47 +146,64 @@ function gettasks() {
 
 function addtask() {
 
-    document.getElementById('saving').className = 'show';
+    
 
-    $.ajax({
-        type: 'POST',
-        url: '../TasksWebService.asmx/AddTask',
-        data: $('#addtask').serialize(),
+    if (document.getElementById("description").value == "") {
+        alert("Task Description Required");
+    }
+    else if (document.getElementById("duedate").value == "") {
+        alert("Task Due Date Required");
+    }
+    else if (document.getElementById("assignedto").value == "") {
+        alert("Task Assignment Required");
+    }
+    else if (document.getElementById("priority").value == "") {
+        alert("Task Priority Required");
+    }
+    else {
 
-        dataType: "json",
+        document.getElementById('saving').className = 'show';
 
-        success: function () {
-            //alert("yes");
+        $.ajax({
+            type: 'POST',
+            url: '../TasksWebService.asmx/AddTask',
+            data: $('#addtask').serialize(),
 
-            $('#bodyModal4').toggle("blinds");
+            dataType: "json",
 
-            $("#bodyModal5").toggle("blinds");
-
-
-            setTimeout(function () {
-                $('#addtaskmodal').modal('toggle');
+            success: function () {
+                //alert("yes");
 
                 $('#bodyModal4').toggle("blinds");
+
                 $("#bodyModal5").toggle("blinds");
-                document.getElementById("addtask").reset();
-                // window.top.location.reload();
-                gettasks();
-                $("#modaltitle").html("Add Task");
-                $('#addbutton').text('Add Task').button("refresh");
-                $("#submittype").val("add");
-                $("#id_tasks").val("");
 
 
-                document.getElementById('saving').className = 'hide';
-            }, 100);
+                setTimeout(function () {
+                    $('#addtaskmodal').modal('toggle');
+
+                    $('#bodyModal4').toggle("blinds");
+                    $("#bodyModal5").toggle("blinds");
+                    document.getElementById("addtask").reset();
+                    // window.top.location.reload();
+                    gettasks();
+                    $("#modaltitle").html("Add Task");
+                    $('#addbutton').text('Add Task').button("refresh");
+                    $("#submittype").val("add");
+                    $("#id_tasks").val("");
+
+
+                    document.getElementById('saving').className = 'hide';
+                }, 100);
 
 
 
-        },
-        failure: function (msg) {
-            alert(msg)
-        }
-    });
+            },
+            failure: function (msg) {
+                alert(msg)
+            }
+        });
+    }
 
 
 }

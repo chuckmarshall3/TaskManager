@@ -111,7 +111,7 @@ public class TasksWebService : System.Web.Services.WebService {
     [WebMethod(EnableSession = true)]
     public int LoginUser(string username, string password)
     {
-        //string location = "~/Views/UserLogin.html";
+
 
         dbconn ds = new dbconn();
         int checkauth = ds.LoginUser2( username,  password);
@@ -119,19 +119,27 @@ public class TasksWebService : System.Web.Services.WebService {
         if (checkauth == 1)
         {
             Session["username"] = username;
-            //location = "~/Views/TaskMain.html";
-            //Server.Transfer("~/Views/TaskMain.html");
-            //HttpContext.Current.Response.Redirect("~/Views/TaskMain.html");
+
         }
 
         return checkauth;
 
     }
 
+    
+
+    [WebMethod(EnableSession = true)]
+    public void LogoutUser()
+    {
+        Session["username"] = "";
+        //Session.Clear();
+
+    }
+
     [WebMethod(EnableSession = true)]
     public int CheckAuth()
     {
-        if (Session["username"] == null)
+        if (Session["username"] == "" || Session["username"] == "")
         {
 
             return 0;

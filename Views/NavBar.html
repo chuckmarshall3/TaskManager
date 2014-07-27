@@ -1,8 +1,4 @@
-﻿
-
-
-
-<nav class="navbar navbar-inverse" role="navigation">
+﻿<nav class="navbar navbar-inverse" role="navigation">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -25,7 +21,7 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="TaskMain.html">Home</a></li>
-                <li><a href="UserLogin.html">Logout</a></li>
+                <li><a href="UserLogin.html" onclick="logout();">Logout</a></li>
 
             </ul>
         </div><!-- /.navbar-collapse -->
@@ -34,4 +30,29 @@
 <script src="../includes/bootstrap/js/bootstrap-dropdown-modified.js"></script>
 <script>
     $('.dropdown-toggle').dropdown();
+
+    function logout(){
+
+        $.ajax({
+            type: "POST",
+            url: "../TasksWebService.asmx/LogoutUser",
+            data: "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+
+
+
+                    window.location = "UserLogin.html";
+
+
+
+            },
+            failure: function (msg) {
+                alert(msg);
+            }
+        });
+
+
+    }
 </script>
