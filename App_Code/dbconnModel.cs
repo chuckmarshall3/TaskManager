@@ -41,8 +41,12 @@ public class dbconn
         
         MySqlCommand cmd = new MySqlCommand(sql, conn);
 
+            
             MySqlDataReader myReader;
             myReader = cmd.ExecuteReader();
+
+           
+
 
             return myReader;
 
@@ -113,30 +117,45 @@ public class dbconn
 
             sql = string.Format("INSERT INTO tasks (description,  priority, duedate, completeddate, finalapprovaldate, createdby, createddate) VALUES('" + description + "','" + priority + "','" + duedate + "'");
 
+            string tmpstring = ",NULL";
+       
+
             if (completiondate != "")
             {
-                completiondate = DateTime.Parse(completiondate).ToString("yyyy-MM-dd HH:mm:ss");
-                sql += ",'" + completiondate + "'";
+                tmpstring = "";
+                tmpstring = ",'"+sqltimeconverstion(completiondate)+"'";
+
+                //completiondate = DateTime.Parse(completiondate).ToString("yyyy-MM-dd HH:mm:ss");
+                //sql += ",'" + completiondate + "'";
             }
-            else
+            /*else
             {
                 sql += ",NULL";
-            }
+            }*/
+
+            sql += tmpstring;
+
+            tmpstring = ",NULL";
 
             if (finalapprovaldate != "")
             {
-                finalapprovaldate = DateTime.Parse(finalapprovaldate).ToString("yyyy-MM-dd HH:mm:ss");
-                sql += ",'" + finalapprovaldate + "'";
+                tmpstring = "";
+                tmpstring = ",'" + sqltimeconverstion(finalapprovaldate) + "'";
+
+                //finalapprovaldate = DateTime.Parse(finalapprovaldate).ToString("yyyy-MM-dd HH:mm:ss");
+                //sql += ",'" + finalapprovaldate + "'";
             }
-            else
+            /*else
             {
                 sql += ",NULL";
-            }
+            }*/
 
 
-            sql += " ,'4',NOW() );";
+            sql += tmpstring + " ,'4',NOW() );";
 
-
+            //HttpContext.Current.Response.BufferOutput = true;
+            //HttpContext.Current.Response.Write(sql);
+            //HttpContext.Current.Response.Flush();
 
             dbconn ds = new dbconn();
             MySqlDataReader results = ds.select(sql);
@@ -157,44 +176,63 @@ public class dbconn
 
 
         }
-        else if (submittype == "edit")
+
+        if (submittype == "edit")
         {
+            
+
             sql = string.Format("UPDATE tasks SET description='" + description + "',priority='" + priority + "',duedate='" + duedate + "'");
+
+            string tmpstring = ",completeddate=NULL";
+
 
             if (completiondate != "")
             {
-                completiondate = DateTime.Parse(completiondate).ToString("yyyy-MM-dd HH:mm:ss");
-                sql += ",completeddate='" + completiondate + "'";
+                tmpstring = "";
+                tmpstring = ",completeddate='" + sqltimeconverstion(completiondate) + "'";
+                
+                //completiondate = DateTime.Parse(completiondate).ToString("yyyy-MM-dd HH:mm:ss");
+                //sql += ",completeddate='" + completiondate + "'";
 
             }
-            else
+            /*else
             {
                 sql += ",completeddate=NULL";
 
-            }
+            }*/
+
+            sql += tmpstring;
+
+            tmpstring = ",finalapprovaldate=NULL";
 
             if (finalapprovaldate != "")
             {
-                finalapprovaldate = DateTime.Parse(finalapprovaldate).ToString("yyyy-MM-dd HH:mm:ss");
-                sql += ",finalapprovaldate='" + finalapprovaldate + "'";
+                tmpstring = "";
+                tmpstring = ",finalapprovaldate='" + sqltimeconverstion(finalapprovaldate) + "'";
+
+
+                //finalapprovaldate = DateTime.Parse(finalapprovaldate).ToString("yyyy-MM-dd HH:mm:ss");
+                //sql += ",finalapprovaldate='" + finalapprovaldate + "'";
             }
-            else
+            /*else
             {
                 sql += ",finalapprovaldate=NULL";
 
-            }
+            }*/
 
 
 
 
-            sql += " WHERE id_tasks=" + id_tasks + ";";
+            sql += tmpstring + " WHERE id_tasks=" + id_tasks + ";";
 
 
 
             sql += "UPDATE task_assignment SET archivedate=NOW() WHERE task_id='" + id_tasks + "';";
             sql += "INSERT INTO task_assignment (task_id,assignedto,assigndate,assignedby) VALUES('" + id_tasks + "'," + assignedto + ",NOW(),4);";
 
-
+            //HttpContext.Current.Response.BufferOutput = true;
+            //HttpContext.Current.Response.Write(sql);
+            //HttpContext.Current.Response.Flush();
 
             dbconn ds = new dbconn();
             MySqlDataReader results = ds.select(sql);
@@ -315,7 +353,7 @@ public class dbconn
             sb.Append(hash[i].ToString("X2"));
         }
 
-        HttpContext.Current.Response.Write(sb);//Output Hash to Browser
+        //HttpContext.Current.Response.Write(sb);//Output Hash to Browser
 
         string sql = string.Format("Select COUNT(*) from users where username='" + username + "' AND password='" + sb + "';");
 
@@ -400,7 +438,20 @@ public class dbconn
         return checkauth;
     }
 
+    private String sqltimeconverstion(string unformatted){
 
+        string formatted = "";
+        if (unformatted != "")
+        {
+            formatted = DateTime.Parse(unformatted).ToString("yyyy-MM-dd HH:mm:ss");
+
+            return formatted;
+        }
+
+
+        return formatted;
+
+    }
 
 
 

@@ -1,11 +1,39 @@
 ﻿
 
 
+//Check Auth
+$(function () {
 
+    $.ajax({
+        type: "POST",
+        url: "../TasksWebService.asmx/CheckAuth",
+        data: "",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
 
-$(document).ready(function () {
-    gettasks();
+            var data = response.d;
+            //alert(data);
+
+            if (data == "0") {
+                window.location = "UserLogin.html";
+            }
+            else {
+
+                gettasks();
+                GetEmployeeNames();
+            }
+
+        },
+        failure: function (msg) {
+            alert(msg);
+        }
+    });
+
 });
+
+
+
 
 
 $(".toggle2").toggle();
@@ -29,7 +57,7 @@ function formreset() {
 }
 
 //Get Employee Names for Select Box
-$(function () {
+function GetEmployeeNames() {
 
     $.ajax({
         type: "POST",
@@ -56,7 +84,7 @@ $(function () {
         }
     });
 
-});
+}
 
 
 

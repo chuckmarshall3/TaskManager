@@ -38,10 +38,7 @@ public class TasksWebService : System.Web.Services.WebService {
     [WebMethod(EnableSession = true)]
     public List<Tasks> GetUserTasks() {
 
-        if (Session["username"].ToString() == "")
-        {
-            HttpContext.Current.Response.Redirect("~/Views/UserLogin.aspx");
-        }
+
 
 
         dbconn ds = new dbconn();
@@ -55,10 +52,6 @@ public class TasksWebService : System.Web.Services.WebService {
     public void AddTask(string description, string assignedto, string priority, string duedate, string completiondate, string finalapprovaldate, string submittype, string id_tasks)
     {
 
-        if (Session["username"].ToString() == "")
-        {
-            HttpContext.Current.Response.Redirect("~/Views/UserLogin.aspx"); 
-        }
 
         dbconn ds = new dbconn();
         ds.InsertUpdateTask( description,  assignedto,  priority,  duedate,  completiondate,  finalapprovaldate,  submittype,  id_tasks);
@@ -73,10 +66,7 @@ public class TasksWebService : System.Web.Services.WebService {
     [WebMethod(EnableSession = true)]
     public List<Tasks> GetTaskInfo(string recid)
     {
-        if (Session["username"].ToString() == "")
-        {
-            HttpContext.Current.Response.Redirect("~/Views/UserLogin.aspx");
-        }
+
 
 
         dbconn ds = new dbconn();
@@ -90,10 +80,7 @@ public class TasksWebService : System.Web.Services.WebService {
     [WebMethod(EnableSession = true)]
     public void DeleteTask(string recid, string name)
     {
-        if (Session["username"].ToString() == "")
-        {
-            HttpContext.Current.Response.Redirect("~/Views/UserLogin.aspx");
-        }
+
 
         dbconn ds = new dbconn();
         ds.DeleteTask( recid,  name);
@@ -110,10 +97,6 @@ public class TasksWebService : System.Web.Services.WebService {
     {
 
 
-        if (Session["username"].ToString() == "")
-        {
-            HttpContext.Current.Response.Redirect("~/Views/UserLogin.aspx");
-        }
 
 
         dbconn ds = new dbconn();
@@ -126,9 +109,9 @@ public class TasksWebService : System.Web.Services.WebService {
 
 
     [WebMethod(EnableSession = true)]
-    public void LoginUser(string username, string password)
+    public int LoginUser(string username, string password)
     {
-        string location = "~/Views/UserLogin.html";
+        //string location = "~/Views/UserLogin.html";
 
         dbconn ds = new dbconn();
         int checkauth = ds.LoginUser2( username,  password);
@@ -141,10 +124,22 @@ public class TasksWebService : System.Web.Services.WebService {
             //HttpContext.Current.Response.Redirect("~/Views/TaskMain.html");
         }
 
-        //return location;
+        return checkauth;
 
     }
 
+    [WebMethod(EnableSession = true)]
+    public int CheckAuth()
+    {
+        if (Session["username"] == null)
+        {
+
+            return 0;
+        }
+
+        return 1;
+
+    }
 
 
     
