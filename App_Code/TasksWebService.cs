@@ -133,13 +133,14 @@ public class TasksWebService : System.Web.Services.WebService {
     {
         Session["username"] = "";
         //Session.Clear();
+        System.Web.HttpContext.Current.Session["username"] = null;
 
     }
 
     [WebMethod(EnableSession = true)]
     public int CheckAuth()
     {
-        if (Session["username"] == "" || Session["username"] == "")
+        if (Session["username"] == null || Session["username"] == "")
         {
 
             return 0;

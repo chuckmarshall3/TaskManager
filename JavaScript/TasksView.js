@@ -54,6 +54,9 @@ $(function () {
 //Reset Modal Form
 function formreset() {
     document.getElementById("addtask").reset();
+    $("#modaltitle").html("Add Task");
+    $('#addbutton').text("Add Task").button("refresh");
+    $("#submittype").val("add");
 }
 
 //Get Employee Names for Select Box
