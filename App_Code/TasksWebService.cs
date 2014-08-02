@@ -131,8 +131,8 @@ public class TasksWebService : System.Web.Services.WebService {
     [WebMethod(EnableSession = true)]
     public void LogoutUser()
     {
-        Session["username"] = "";
-        //Session.Clear();
+        //Session["username"] = "";
+
         System.Web.HttpContext.Current.Session["username"] = null;
 
     }
